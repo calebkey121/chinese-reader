@@ -1,0 +1,1102 @@
+[
+  {
+    "schema_version": 1,
+    "id": "book1",
+    "title": "神秘的学校",
+    "chapters": [
+      {
+        "id": "ch1",
+        "title": "第一章：上学的第一天",
+        "text": "我叫爱琪。今天是星期四，是我来这个学校上学的第一天。这个学校里的学生不多。在这个学校上学的学生们，都要住在学校里边，我也一样。在上课的时候，老师请我到前边介绍我的名字和爱好。\n\n爱琪：“同学们，早上好！我的名字叫爱琪，你们叫我小爱也行。我喜欢唱歌，也喜欢看电影。我不喜欢读书。很高兴认识你们！我想要和你们做好朋友！”\n\n我还想再介绍一些我的事：我的家在……我常常去的商场是……我最喜欢吃的东西是……\n\n这些，我都不记得了。\n\n来这个学校前的事，我都不记得了！",
+        "en_sentences": [
+          {
+            "start": 0,
+            "end": 5,
+            "en": "My name is Aiqi."
+          },
+          {
+            "start": 5,
+            "end": 26,
+            "en": "Today is Thursday, and it's my first day studying at this school."
+          },
+          {
+            "start": 26,
+            "end": 37,
+            "en": "There aren't many students at this school."
+          },
+          {
+            "start": 37,
+            "end": 63,
+            "en": "All the students who study here live at the school, and I do too."
+          },
+          {
+            "start": 63,
+            "end": 87,
+            "en": "During class, the teacher asked me to go to the front to introduce my name and hobbies."
+          },
+          {
+            "start": 87,
+            "end": 101,
+            "en": "Aiqi: “Good morning, classmates!”"
+          },
+          {
+            "start": 101,
+            "end": 118,
+            "en": "My name is Aiqi; you can call me Xiao Ai too."
+          },
+          {
+            "start": 118,
+            "end": 131,
+            "en": "I like singing, and I also like watching movies."
+          },
+          {
+            "start": 131,
+            "end": 138,
+            "en": "I don't like studying."
+          },
+          {
+            "start": 138,
+            "end": 146,
+            "en": "Nice to meet you!"
+          },
+          {
+            "start": 146,
+            "end": 157,
+            "en": "I want to be friends with you all!"
+          },
+          {
+            "start": 157,
+            "end": 211,
+            "en": "I also wanted to introduce more about myself—where my home is, the mall I often go to, and what food I like most... but I don't remember any of it."
+          },
+          {
+            "start": 211,
+            "end": 229,
+            "en": "I don't remember anything from before I came to this school!"
+          }
+        ]
+      },
+      {
+        "id": "ch2",
+        "title": "第二章：第一个朋友",
+        "text": "下课后，有一个女生和我说话。她说她的名字是诗启，两个多月前来到了这个学校。她喜欢看电影，喜欢听歌，还喜欢唱歌。她说她想和我做朋友。我们有一样的爱好，我也喜欢她。诗启是我在学校里认识的第一个好朋友。\n\n学校里的事，我都和诗启一起做。早饭、午饭、晚饭，我们两个人都在一起吃。上课的时候，我们坐在一起；下课的时候，我们一起玩儿。晚上睡觉前，我们会一起唱喜欢的歌。能和诗启做朋友，我真的很高兴！",
+        "en_sentences": [
+          {
+            "start": 0,
+            "end": 14,
+            "en": "After class, a girl talked to me."
+          },
+          {
+            "start": 14,
+            "end": 37,
+            "en": "She said her name is Shiqi, and she came to this school more than two months ago."
+          },
+          {
+            "start": 37,
+            "end": 55,
+            "en": "She likes watching movies, listening to songs, and singing."
+          },
+          {
+            "start": 55,
+            "end": 65,
+            "en": "She said she wants to be friends with me."
+          },
+          {
+            "start": 65,
+            "end": 80,
+            "en": "We have the same hobbies, and I like her too."
+          },
+          {
+            "start": 80,
+            "end": 98,
+            "en": "Shiqi is the first good friend I met at this school."
+          },
+          {
+            "start": 98,
+            "end": 115,
+            "en": "At school, I do things together with Shiqi."
+          },
+          {
+            "start": 115,
+            "end": 135,
+            "en": "For breakfast, lunch, and dinner, the two of us eat together."
+          },
+          {
+            "start": 135,
+            "end": 161,
+            "en": "In class we sit together; after class we play together."
+          },
+          {
+            "start": 161,
+            "end": 178,
+            "en": "Before going to sleep at night, we sing songs we like together."
+          },
+          {
+            "start": 178,
+            "end": 193,
+            "en": "Being friends with Shiqi makes me really happy!"
+          }
+        ]
+      },
+      {
+        "id": "ch3",
+        "title": "第三章：不能做的事",
+        "text": "我们一个星期要上五天的课，从星期一到星期五。在星期六和星期日的时候，我们休息，不用上课。\n\n在不用上课的这些时间里，我很想和诗启一起出去玩儿。我知道，在学校的东边有一个电影院，我想和诗启一起去那里看电影。我还知道，在电影院的北边有一个饭店，我想和诗启一起去那里吃东西。这些都是我在学校里的地图上看到的地方。\n\n我也知道，我们不能去。在学校里，有一些我们不能做的事：没有老师和我们一起的时候，我们就不能出学校。我们也不能用手机和电脑。",
+        "en_sentences": [
+          {
+            "start": 0,
+            "end": 22,
+            "en": "We have classes five days a week, from Monday to Friday."
+          },
+          {
+            "start": 22,
+            "end": 44,
+            "en": "On Saturdays and Sundays, we rest and don’t have class."
+          },
+          {
+            "start": 44,
+            "end": 71,
+            "en": "During this time with no classes, I really want to go out and have fun with Shiqi."
+          },
+          {
+            "start": 71,
+            "end": 102,
+            "en": "I know there is a movie theater on the east side of the school, and I want to go there with Shiqi to watch a movie."
+          },
+          {
+            "start": 102,
+            "end": 134,
+            "en": "I also know there is a restaurant north of the theater, and I want to go there with Shiqi to eat."
+          },
+          {
+            "start": 134,
+            "end": 153,
+            "en": "These are places I saw on the school map."
+          },
+          {
+            "start": 153,
+            "end": 166,
+            "en": "But I also know we can’t go."
+          },
+          {
+            "start": 166,
+            "end": 204,
+            "en": "At school, there are things we are not allowed to do: when no teacher is with us, we can’t leave the school."
+          },
+          {
+            "start": 204,
+            "end": 216,
+            "en": "We also can’t use phones or computers."
+          }
+        ]
+      },
+      {
+        "id": "ch4",
+        "title": "第四章：“都很好”",
+        "text": "今天是星期六，老师说要带我们一起去商场买东西，我很高兴。诗启准备买一个新书包。我准备买一个新本子。\n\n到了商场后，老师给了我们每个人一百元钱。我们能用这一百元钱，去买喜欢的东西。我和诗启在商场里一块儿买东西，我们先去买书包。诗启拿了一个书包就要买。\n\n爱琪：“你先等一会儿再买！你怎么在商店门口，不进来呢？商店里边还有很多别的书包呢，你快进来！”\n\n诗启：“好的。”\n\n爱琪：“你看！这个书包也很好看。”\n\n诗启：“好，我就买这个。”\n\n爱琪：“你还没看呢……还有这个！这两个书包，你喜欢哪个？”\n\n诗启：“我觉得都很好。”\n\n爱琪：“……”\n\n最后，诗启买了我觉得好看的那个书包。诗启常常觉得什么都很好，我和她不一样。我有喜欢的东西，也有不喜欢的东西。\n\n在商场里，我还看到了两个人……",
+        "en_sentences": [
+          {
+            "start": 0,
+            "end": 28,
+            "en": "Today is Saturday. The teacher said he would take us to the mall to buy things, and I was very happy."
+          },
+          {
+            "start": 28,
+            "end": 39,
+            "en": "Shiqi planned to buy a new backpack."
+          },
+          {
+            "start": 39,
+            "end": 49,
+            "en": "I planned to buy a new notebook."
+          },
+          {
+            "start": 49,
+            "end": 71,
+            "en": "After we arrived at the mall, the teacher gave each of us 100 yuan."
+          },
+          {
+            "start": 71,
+            "end": 89,
+            "en": "We could use this 100 yuan to buy things we liked."
+          },
+          {
+            "start": 89,
+            "end": 112,
+            "en": "Shiqi and I shopped together in the mall, and first we went to buy a backpack."
+          },
+          {
+            "start": 112,
+            "end": 124,
+            "en": "Shiqi picked up a backpack and was about to buy it."
+          },
+          {
+            "start": 124,
+            "end": 139,
+            "en": "Aiqi: “Wait a moment before you buy!”"
+          },
+          {
+            "start": 139,
+            "end": 153,
+            "en": "Why are you standing at the shop entrance and not coming in?"
+          },
+          {
+            "start": 153,
+            "end": 172,
+            "en": "There are many other backpacks inside—come in quickly!”"
+          },
+          {
+            "start": 172,
+            "end": 182,
+            "en": "Shiqi: “Okay.”"
+          },
+          {
+            "start": 182,
+            "end": 192,
+            "en": "Aiqi: “Look!”"
+          },
+          {
+            "start": 192,
+            "end": 201,
+            "en": "This backpack looks nice too."
+          },
+          {
+            "start": 201,
+            "end": 216,
+            "en": "Shiqi: “Okay, I’ll buy this one.”"
+          },
+          {
+            "start": 216,
+            "end": 235,
+            "en": "Aiqi: “You haven’t even looked yet… and there’s this one too!”"
+          },
+          {
+            "start": 235,
+            "end": 247,
+            "en": "Between these two backpacks, which one do you like?"
+          },
+          {
+            "start": 247,
+            "end": 261,
+            "en": "Shiqi: “I think they’re both good.”"
+          },
+          {
+            "start": 261,
+            "end": 291,
+            "en": "In the end, Shiqi bought the backpack that I thought looked good."
+          },
+          {
+            "start": 291,
+            "end": 310,
+            "en": "Shiqi often thinks everything is good, but I’m not the same as her."
+          },
+          {
+            "start": 310,
+            "end": 327,
+            "en": "There are things I like, and things I don’t like."
+          },
+          {
+            "start": 327,
+            "end": 344,
+            "en": "At the mall, I also saw two people…"
+          }
+        ]
+      },
+      {
+        "id": "ch5",
+        "title": "第五章：家人？",
+        "text": "在商场里，我看到了两个人。那是一个女人和一个小男孩儿，我听到了他们说的话。小男孩儿说：“妈妈，我想买这个书包。”那个女人回答：“好。”\n\n听了小男孩儿的话，我想到了我的妈妈。我的妈妈是谁？她现在在哪儿？我都不记得了。我还有别的家人吗？我的家人在哪里？我也不知道。\n\n我走到诗启的旁边。\n\n爱琪：“诗启，你家有几口人？”\n\n诗启：“我不知道。”\n\n爱琪：“你的妈妈是谁？她现在在哪儿？”\n\n诗启：“我也不知道。”\n\n爱琪：“来这里上学前，你住在哪里？”\n\n诗启：“我不记得了……”\n\n诗启也不记得这些事，真的是太奇怪了！我们是生病了吗？怎么都不记得来学校前的事了？也都不记得我们的家人？",
+        "en_sentences": [
+          {
+            "start": 0,
+            "end": 13,
+            "en": "At the mall, I saw two people."
+          },
+          {
+            "start": 13,
+            "end": 37,
+            "en": "It was a woman and a little boy, and I heard what they said."
+          },
+          {
+            "start": 37,
+            "end": 55,
+            "en": "The little boy said, 'Mom, I want to buy this backpack.'"
+          },
+          {
+            "start": 55,
+            "end": 66,
+            "en": "The woman replied, 'Okay.'"
+          },
+          {
+            "start": 66,
+            "end": 87,
+            "en": "After hearing him, I thought of my mom."
+          },
+          {
+            "start": 87,
+            "end": 94,
+            "en": "Who is my mom?"
+          },
+          {
+            "start": 94,
+            "end": 101,
+            "en": "Where is she now?"
+          },
+          {
+            "start": 101,
+            "end": 108,
+            "en": "I don’t remember."
+          },
+          {
+            "start": 108,
+            "end": 117,
+            "en": "Do I have other family members?"
+          },
+          {
+            "start": 117,
+            "end": 125,
+            "en": "Where is my family?"
+          },
+          {
+            "start": 125,
+            "end": 131,
+            "en": "I don’t know either."
+          },
+          {
+            "start": 131,
+            "end": 142,
+            "en": "I walked over to Shiqi."
+          },
+          {
+            "start": 142,
+            "end": 158,
+            "en": "Aiqi: 'Shiqi, how many people are in your family?'"
+          },
+          {
+            "start": 158,
+            "end": 170,
+            "en": "Shiqi: 'I don’t know.'"
+          },
+          {
+            "start": 170,
+            "end": 184,
+            "en": "Aiqi: 'Who is your mom?'"
+          },
+          {
+            "start": 184,
+            "end": 191,
+            "en": "Where is she now?"
+          },
+          {
+            "start": 191,
+            "end": 204,
+            "en": "Shiqi: 'I don’t know either.'"
+          },
+          {
+            "start": 204,
+            "end": 224,
+            "en": "Aiqi: 'Before you came here to study, where did you live?'"
+          },
+          {
+            "start": 224,
+            "end": 259,
+            "en": "Shiqi: 'I don’t remember…' She doesn’t remember these things either—this is really too strange!"
+          },
+          {
+            "start": 259,
+            "end": 267,
+            "en": "Are we sick?"
+          },
+          {
+            "start": 267,
+            "end": 281,
+            "en": "How is it that we don’t remember anything from before coming to school?"
+          },
+          {
+            "start": 281,
+            "end": 292,
+            "en": "And we don’t remember our families either?"
+          }
+        ]
+      },
+      {
+        "id": "ch6",
+        "title": "第六章：“对”",
+        "text": "我和诗启不住在一个房间里。今天下课后，我去了诗启的房间，和她一起学习。\n\n爱琪：“诗启，你来这个学校几个月了？”\n\n诗启：“到下个星期就三个月了。”\n\n爱琪：“都快三个月了！我来这里还不到一个星期。我们学校有十个老师吧？诗启，你觉得哪个老师最好？”\n\n诗启：“我觉得老师们都很好。”\n\n爱琪：“我很喜欢我们的汉语老师，我觉得汉语老师比外语老师好。汉语课很好玩儿，有时候，老师会给我们放电影。外语课太难了，很多外语课本里的课文我都不会读。”\n\n诗启：“对，那些课文太难了。”\n\n爱琪：“你真的觉得难吗？上课的时候，我听见你都会读。你觉得我们的生活老师，王老师好不好？”\n\n诗启：“他是个很好的人。”\n\n爱琪：“我觉得他很凶。”\n\n诗启：“对，他也很凶。”\n\n诗启还是一样，常常用“不知道”和“对”……来回答我。",
+        "en_sentences": [
+          {
+            "start": 0,
+            "end": 13,
+            "en": "Shiqi and I don't live in the same room."
+          },
+          {
+            "start": 13,
+            "end": 35,
+            "en": "After class today, I went to Shiqi's room and studied with her."
+          },
+          {
+            "start": 35,
+            "end": 55,
+            "en": "Aiqi: 'Shiqi, how many months have you been at this school?'"
+          },
+          {
+            "start": 55,
+            "end": 73,
+            "en": "Shiqi: 'By next week it will be three months.'"
+          },
+          {
+            "start": 73,
+            "end": 87,
+            "en": "Aiqi: 'Almost three months!'"
+          },
+          {
+            "start": 87,
+            "end": 101,
+            "en": "I've been here less than a week."
+          },
+          {
+            "start": 101,
+            "end": 114,
+            "en": "Our school has ten teachers, right?"
+          },
+          {
+            "start": 114,
+            "end": 131,
+            "en": "Shiqi, which teacher do you think is the best?'"
+          },
+          {
+            "start": 131,
+            "end": 147,
+            "en": "Shiqi: 'I think all the teachers are good.'"
+          },
+          {
+            "start": 147,
+            "end": 169,
+            "en": "Aiqi: 'I really like our Chinese teacher.'"
+          },
+          {
+            "start": 169,
+            "end": 186,
+            "en": "I think the Chinese teacher is better than the foreign-language teacher."
+          },
+          {
+            "start": 186,
+            "end": 204,
+            "en": "Chinese class is really fun."
+          },
+          {
+            "start": 204,
+            "end": 221,
+            "en": "Sometimes the teacher plays movies for us."
+          },
+          {
+            "start": 221,
+            "end": 251,
+            "en": "Foreign-language class is too hard; I can't read a lot of the texts in the foreign-language textbook."
+          },
+          {
+            "start": 251,
+            "end": 269,
+            "en": "Shiqi: 'Yes, those texts are too hard.'"
+          },
+          {
+            "start": 269,
+            "end": 285,
+            "en": "Aiqi: 'Do you really think it's hard?'"
+          },
+          {
+            "start": 285,
+            "end": 301,
+            "en": "In class, I heard you could read them all."
+          },
+          {
+            "start": 301,
+            "end": 325,
+            "en": "What do you think of our life teacher, Teacher Wang—good or not?'"
+          },
+          {
+            "start": 325,
+            "end": 339,
+            "en": "Shiqi: 'He's a very good person.'"
+          },
+          {
+            "start": 339,
+            "end": 354,
+            "en": "Aiqi: 'I think he's very strict.'"
+          },
+          {
+            "start": 354,
+            "end": 368,
+            "en": "Shiqi: 'Yes, he's also very strict.'"
+          },
+          {
+            "start": 368,
+            "end": 397,
+            "en": "Shiqi was still the same, often answering me with 'I don't know' and 'yes'..."
+          }
+        ]
+      },
+      {
+        "id": "ch7",
+        "title": "第七章：消失的朋友",
+        "text": "今天是星期二，诗启没有来上课。老师没有告诉我们诗启怎么了。我问别的同学诗启去哪儿了，他们也都说不知道。没有诗启的这一天，我做什么事都不高兴。\n\n放学后，我马上去诗启的房间找她，想看看她是不是病了。我来到诗启的房间后，没有看到她。她的房间里很干净，床上什么东西都没有。她的书、衣服、杯子、书包……她的东西都没有了。诗启怎么了？她去哪儿了？她怎么没有告诉我就走了？她还会回来吗？",
+        "en_sentences": [
+          {
+            "start": 0,
+            "end": 15,
+            "en": "Today is Tuesday, and Shiqi didn't come to class."
+          },
+          {
+            "start": 15,
+            "end": 29,
+            "en": "The teacher didn't tell us what happened to Shiqi."
+          },
+          {
+            "start": 29,
+            "end": 51,
+            "en": "I asked other classmates where Shiqi went, but they all said they didn't know."
+          },
+          {
+            "start": 51,
+            "end": 68,
+            "en": "Without Shiqi, I wasn't happy doing anything that day."
+          },
+          {
+            "start": 68,
+            "end": 96,
+            "en": "After school, I immediately went to Shiqi's room to look for her, to see if she was sick."
+          },
+          {
+            "start": 96,
+            "end": 111,
+            "en": "When I got to her room, I didn't see her."
+          },
+          {
+            "start": 111,
+            "end": 128,
+            "en": "Her room was very clean, and there was nothing on the bed."
+          },
+          {
+            "start": 128,
+            "end": 155,
+            "en": "Her books, clothes, cup, backpack... all of her things were gone."
+          },
+          {
+            "start": 155,
+            "end": 164,
+            "en": "What happened to Shiqi?"
+          },
+          {
+            "start": 164,
+            "end": 172,
+            "en": "Where did she go?"
+          },
+          {
+            "start": 172,
+            "end": 180,
+            "en": "Why did she leave without telling me?"
+          },
+          {
+            "start": 180,
+            "end": 187,
+            "en": "Will she come back?"
+          }
+        ]
+      },
+      {
+        "id": "ch8",
+        "title": "第八章：寻找她",
+        "text": "第二天，我一到学校就去找诗启。我去了教室、走廊、食堂，也去了她的房间，可是哪里都没有她。我问了老师，老师只说她今天不在，让我回去上课。\n\n下课后，我又去问同学。有人说没见过她，有人说不记得这个名字。我心里很难受：昨天她还在，今天怎么就不见了？\n\n晚上，我一个人坐在床上，想了很久。诗启真的来过吗？如果她来过，为什么大家都不记得？我决定继续找下去。",
+        "en_sentences": [
+          {
+            "start": 0,
+            "end": 15,
+            "en": "The next day, as soon as I arrived at school, I went to look for Shiqi."
+          },
+          {
+            "start": 15,
+            "end": 44,
+            "en": "I went to the classroom, the hallway, and the cafeteria, and I also went to her room, but she was nowhere."
+          },
+          {
+            "start": 44,
+            "end": 69,
+            "en": "I asked the teacher, and the teacher only said she wasn't here today and told me to go back to class."
+          },
+          {
+            "start": 69,
+            "end": 80,
+            "en": "After class, I went to ask other classmates again."
+          },
+          {
+            "start": 80,
+            "end": 99,
+            "en": "Some said they hadn't seen her; some said they didn't remember that name."
+          },
+          {
+            "start": 99,
+            "end": 123,
+            "en": "I felt awful: she was here yesterday—how could she be gone today?"
+          },
+          {
+            "start": 123,
+            "end": 140,
+            "en": "At night, I sat on the bed alone and thought for a long time."
+          },
+          {
+            "start": 140,
+            "end": 148,
+            "en": "Did Shiqi really come here?"
+          },
+          {
+            "start": 148,
+            "end": 164,
+            "en": "If she did, why doesn't everyone remember?"
+          },
+          {
+            "start": 164,
+            "end": 173,
+            "en": "I decided to keep searching."
+          }
+        ]
+      },
+      {
+        "id": "ch9",
+        "title": "第九章：变化",
+        "text": "没有诗启的日子，一切都不一样了。上课的时候，我总是看向她以前坐的地方。那个位子现在空着，好像从来没有人坐过。\n\n我发现了一些小变化：她的名字不在名单上，她的床也不见了。就像她从来没有在这个学校生活过一样。\n\n我开始怀疑自己：是不是我记错了？可是我还记得我们一起吃饭、一起唱歌。我知道，这些不是假的。",
+        "en_sentences": [
+          {
+            "start": 0,
+            "end": 16,
+            "en": "Without Shiqi, everything felt different."
+          },
+          {
+            "start": 16,
+            "end": 35,
+            "en": "During class, I always looked toward where she used to sit."
+          },
+          {
+            "start": 35,
+            "end": 54,
+            "en": "That seat is empty now, as if no one ever sat there."
+          },
+          {
+            "start": 54,
+            "end": 85,
+            "en": "I noticed some small changes: her name isn't on the list, and her bed is gone too."
+          },
+          {
+            "start": 85,
+            "end": 103,
+            "en": "It's as if she never lived at this school."
+          },
+          {
+            "start": 103,
+            "end": 119,
+            "en": "I started to doubt myself: did I remember wrong?"
+          },
+          {
+            "start": 119,
+            "end": 138,
+            "en": "But I still remember us eating together and singing together."
+          },
+          {
+            "start": 138,
+            "end": 149,
+            "en": "I know this isn't fake."
+          }
+        ]
+      },
+      {
+        "id": "ch10",
+        "title": "第十章：新朋友",
+        "text": "几天后，班里来了一个新学生。老师让她坐在诗启以前的位子上。她对我笑，说她刚来这个学校，什么都不熟。\n\n下课时，她来和我说话，问我学校的事。她说她也不记得来这里以前的生活。\n\n我一边和她聊天，一边想起诗启。她们不一样，可是有一点很像：她们都没有过去。我不知道该不该再交朋友，但我也不想再一个人。",
+        "en_sentences": [
+          {
+            "start": 0,
+            "end": 14,
+            "en": "A few days later, a new student came to our class."
+          },
+          {
+            "start": 14,
+            "end": 29,
+            "en": "The teacher had her sit in the seat Shiqi used to sit in."
+          },
+          {
+            "start": 29,
+            "end": 49,
+            "en": "She smiled at me and said she had just come to this school and wasn't familiar with anything."
+          },
+          {
+            "start": 49,
+            "end": 67,
+            "en": "After class, she came to talk to me and asked about the school."
+          },
+          {
+            "start": 67,
+            "end": 85,
+            "en": "She said she also didn't remember her life before coming here."
+          },
+          {
+            "start": 85,
+            "end": 103,
+            "en": "While I chatted with her, I kept thinking of Shiqi."
+          },
+          {
+            "start": 103,
+            "end": 124,
+            "en": "They are different, but there's one thing that's similar: neither of them has a past."
+          },
+          {
+            "start": 124,
+            "end": 146,
+            "en": "I don't know if I should make friends again, but I also don't want to be alone anymore."
+          }
+        ]
+      },
+      {
+        "id": "ch11",
+        "title": "第十一章：我不知道",
+        "text": "新同学叫小文。她的眼睛很亮，说话也很轻。可是我问她什么，她常常回答：我不知道。\n\n下课的时候，我和她一起去食堂。我问她，你来这个学校多久了。她说：我不知道。我又问她，你住在哪个房间。她还是说：我不知道。\n\n我觉得奇怪：怎么会什么都不知道。我问她，来这里以前你记得什么吗。她想了想，摇摇头，说她不记得。\n\n听到这些话，我心里一冷。诗启以前也常常这样回答我。难道在这个学校里，所有人都会慢慢变成这样吗？",
+        "en_sentences": [
+          {
+            "start": 0,
+            "end": 7,
+            "en": "The new classmate is called Xiaowen."
+          },
+          {
+            "start": 7,
+            "end": 20,
+            "en": "Her eyes are bright, and she speaks softly."
+          },
+          {
+            "start": 20,
+            "end": 39,
+            "en": "But no matter what I asked, she often answered: I don't know."
+          },
+          {
+            "start": 39,
+            "end": 56,
+            "en": "After class, I went to the cafeteria with her."
+          },
+          {
+            "start": 56,
+            "end": 70,
+            "en": "I asked her how long she had been at this school."
+          },
+          {
+            "start": 70,
+            "end": 78,
+            "en": "She said: I don't know."
+          },
+          {
+            "start": 78,
+            "end": 91,
+            "en": "I asked again which room she lived in."
+          },
+          {
+            "start": 91,
+            "end": 101,
+            "en": "She still said: I don't know."
+          },
+          {
+            "start": 101,
+            "end": 119,
+            "en": "I felt it was strange—how could she not know anything?"
+          },
+          {
+            "start": 119,
+            "end": 135,
+            "en": "I asked what she remembered from before coming here."
+          },
+          {
+            "start": 135,
+            "end": 150,
+            "en": "She thought for a moment, shook her head, and said she didn't remember."
+          },
+          {
+            "start": 150,
+            "end": 164,
+            "en": "Hearing this, my heart went cold."
+          },
+          {
+            "start": 164,
+            "end": 177,
+            "en": "Shiqi used to answer me like this too."
+          },
+          {
+            "start": 177,
+            "end": 199,
+            "en": "In this school, will everyone slowly become like this?"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "schema_version": 1,
+    "id": "book2",
+    "title": "丝雨的Zoogether",
+    "chapters": [
+      {
+        "id": "ch1",
+        "title": "第一章：最努力的女孩",
+        "text": "丝雨刻苦努力，是最美也最聪明的女孩。她的男友小卡英勇帅气，猫咪Kiki又胖又黏人。三人互相照顾，学习、冒险、做饭、看星星，烦恼都会消失。他们笑着说，这就是他们的幸福“zoogether”。每天都充满温暖与希望。"
+      }
+    ]
+  },
+  {
+    "schema_version": 1,
+    "id": "book3",
+    "title": "那条不会回的路",
+    "chapters": [
+      {
+        "id": "ch1",
+        "title": "第一章：路口",
+        "text": "我住的小镇很安静。镇外有一条小路，路很窄，两边都是树。大家叫它“北边的路”。白天有人走过，可是很少。\n\n我第一次听说这条路，是在食堂。一个同学小声说：“别一个人去那边。”我问他为什么，他只摇头，说：“去过的人，不会回来。”\n\n我不信。我问老师，老师笑着说：“别想太多，回去学习。”我又问生活老师王老师，他看了我一眼，说：“不要问。”\n\n第二天是星期六，我们不用上课。我和同学在操场玩儿，可是我一直在想那条路。中午以后，我一个人走到学校门口。门口有地图，地图上没有那条路。\n\n我沿着围墙往北走，越走越安静。风吹过树叶，声音像有人在说话。路口有一块旧牌子，上面写着：禁止进入。可是牌子很破，好像很久没人管。\n\n我站在路口，没有进去。我看见地上有一只小鞋子，干净得像刚放下。旁边还有一点白纸，上面只有两个字：回来。\n\n我心里一冷，赶快把纸捡起来放进口袋。我回头看学校，学校就在那儿，可是我突然觉得离得很远。\n\n晚上回到宿舍，我把那张纸拿出来。字还在，可是纸背面多了一个淡淡的手印。我正想再看清楚，灯突然闪了一下。\n\n门外有人轻轻敲门。没有人说话，只听见一声很低的笑。",
+        "en_sentences": [
+          {
+            "start": 0,
+            "end": 9,
+            "en": "My town is very quiet."
+          },
+          {
+            "start": 9,
+            "end": 29,
+            "en": "Outside the town there is a small road. It is narrow, with trees on both sides."
+          },
+          {
+            "start": 29,
+            "end": 40,
+            "en": "Everyone calls it “the north road.”"
+          },
+          {
+            "start": 40,
+            "end": 53,
+            "en": "People walk there in the daytime, but not many.\n\n"
+          },
+          {
+            "start": 53,
+            "end": 68,
+            "en": "The first time I heard about this road was in the cafeteria."
+          },
+          {
+            "start": 68,
+            "end": 84,
+            "en": "A classmate whispered, “Don’t go over there alone.”"
+          },
+          {
+            "start": 84,
+            "end": 110,
+            "en": "I asked why, but he only shook his head and said, “People who go there don’t come back.”\n\n"
+          },
+          {
+            "start": 110,
+            "end": 114,
+            "en": "I didn’t believe it."
+          },
+          {
+            "start": 114,
+            "end": 139,
+            "en": "I asked a teacher. The teacher smiled and said, “Don’t think too much. Go back and study.”"
+          },
+          {
+            "start": 139,
+            "end": 164,
+            "en": "I asked our life teacher, Teacher Wang. He glanced at me and said, “Don’t ask.”\n\n"
+          },
+          {
+            "start": 164,
+            "end": 179,
+            "en": "The next day was Saturday, and we didn’t have class."
+          },
+          {
+            "start": 179,
+            "end": 202,
+            "en": "I played on the playground with classmates, but I kept thinking about that road."
+          },
+          {
+            "start": 202,
+            "end": 217,
+            "en": "After noon, I walked alone to the school gate."
+          },
+          {
+            "start": 217,
+            "end": 235,
+            "en": "At the gate there is a map, but that road isn’t on it.\n\n"
+          },
+          {
+            "start": 235,
+            "end": 253,
+            "en": "I walked north along the wall. The farther I went, the quieter it became."
+          },
+          {
+            "start": 253,
+            "end": 268,
+            "en": "The wind moved through the leaves, and it sounded like someone was talking."
+          },
+          {
+            "start": 268,
+            "end": 291,
+            "en": "At the road entrance there was an old sign that said: No Entry."
+          },
+          {
+            "start": 291,
+            "end": 310,
+            "en": "But the sign was broken, like nobody had cared for it in a long time.\n\n"
+          },
+          {
+            "start": 310,
+            "end": 319,
+            "en": "I stood at the entrance and didn’t go in."
+          },
+          {
+            "start": 319,
+            "end": 338,
+            "en": "I saw a small shoe on the ground, clean as if it had just been set down."
+          },
+          {
+            "start": 338,
+            "end": 360,
+            "en": "Next to it was a small piece of white paper with only two characters: “Come back.”\n\n"
+          },
+          {
+            "start": 360,
+            "end": 377,
+            "en": "My heart went cold. I quickly picked up the paper and put it into my pocket."
+          },
+          {
+            "start": 377,
+            "end": 399,
+            "en": "I looked back at the school. It was right there, but suddenly it felt very far away.\n\n"
+          },
+          {
+            "start": 399,
+            "end": 416,
+            "en": "That night in the dorm, I took the paper out."
+          },
+          {
+            "start": 416,
+            "end": 435,
+            "en": "The words were still there, but on the back was a faint handprint."
+          },
+          {
+            "start": 435,
+            "end": 455,
+            "en": "I was trying to see it clearly when the light suddenly flickered.\n\n"
+          },
+          {
+            "start": 455,
+            "end": 464,
+            "en": "Someone gently knocked on the door."
+          },
+          {
+            "start": 464,
+            "end": 480,
+            "en": "No one spoke. I only heard a very quiet laugh."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "schema_version": 1,
+    "id": "tales_of_a_man",
+    "title": "Tales of a Man",
+    "chapters": [
+      {
+        "id": "ch1",
+        "title": "没有封面的书",
+        "text": "我在旧书店里发现一本没有封面的书。翻开第一页，里面写着：\n    “如果你看到这行字，请把书带走。”\n    \n我抬头看了看四周，没有人。于是我买下它，走出门时，风把书页吹开，露出一张夹着的照片：\n    照片里的人，竟然是我。",
+        "en_sentences": [
+          {
+            "start": 0,
+            "end": 17,
+            "en": "I found an old book without its cover in a used bookstore."
+          },
+          {
+            "start": 17,
+            "end": 49,
+            "en": "Opening the first page, it says: \"If you're reading this line, please take the book with you.\""
+          },
+          {
+            "start": 49,
+            "end": 69,
+            "en": "I looked up and around, but there was no one."
+          },
+          {
+            "start": 69,
+            "end": 114,
+            "en": "So I bought it, and as I stepped out of the door, the wind blew open the book pages to reveal a photo tucked inside: The person in the photo was actually me."
+          }
+        ]
+      },
+      {
+        "id": "ch2",
+        "title": "雨中的小咖啡店",
+        "text": "昨天我在雨中迷路，走进一家小咖啡店。老板笑着给我一杯热茶，说：“慢慢来，路会找到你。”我坐了一会儿，雨停了，心也安静了。",
+        "en_sentences": [
+          {
+            "start": 0,
+            "end": 18,
+            "en": "Yesterday, I got lost in the rain and stumbled upon a small coffee shop."
+          },
+          {
+            "start": 18,
+            "end": 42,
+            "en": "The boss smilingly handed me a cup of hot tea and said, \"Take it slow, the road will find you.\""
+          },
+          {
+            "start": 42,
+            "end": 60,
+            "en": "I sat for a while, and then the rain stopped, my heart grew calm as well.\""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "schema_version": 1,
+    "id": "kiki",
+    "title": "Kiki",
+    "chapters": [
+      {
+        "id": "ch1",
+        "title": "懒猫Kiki的冒险",
+        "text": "Kiki是一只又胖又懒的猫，平时最爱睡觉和吃鱼。一天中午，它发现窗外有一只小鸟叼着闪闪发光的钥匙飞走了。Kiki本想继续睡，可好奇心推着它跳下窗台，慢慢跟了上去。\n它穿过小巷，爬过矮墙，第一次跑得气喘吁吁。小鸟把钥匙掉在一棵老树下，Kiki叼起钥匙，发现树洞里藏着一盒温热的猫罐头。\nKiki吃得心满意足，拖着钥匙回家，从此每天仍然很懒，但心里多了一点：原来世界，也会奖励一次小小的勇敢。",
+        "en_sentences": [
+          {
+            "start": 0,
+            "end": 24,
+            "en": "Kiki is a plump and lazy cat who loves sleeping and eating fish."
+          },
+          {
+            "start": 24,
+            "end": 52,
+            "en": "One midday, it discovered that outside the window, there was a small bird flying away with a shiny key in its beak."
+          },
+          {
+            "start": 52,
+            "end": 81,
+            "en": "Kiki wanted to keep sleeping, but curiosity pushed it to jump down from the windowsill and slowly follow along."
+          },
+          {
+            "start": 81,
+            "end": 103,
+            "en": "It dashed through the alley, climbed over the low wall for the first time, breathlessly panting."
+          },
+          {
+            "start": 103,
+            "end": 141,
+            "en": "A little bird dropped its key under an old tree, and Kiki picked it up. Upon examining the hollow of the tree, she found a warm can of cat food hidden there."
+          },
+          {
+            "start": 141,
+            "end": 194,
+            "en": "Kiki ate to her heart's content and dragged her key back home, whereupon she remained as lazy as ever every day thereafter. But inside, there was a new addition: she knew that the world could reward even the smallest act of bravery."
+          }
+        ]
+      }
+    ]
+  }
+]

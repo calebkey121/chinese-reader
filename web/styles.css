@@ -1,0 +1,45 @@
+body { font-family: system-ui, -apple-system, sans-serif; margin: 0; }
+#app { padding: 12px; max-width: 900px; margin: 0 auto; }
+.topbar { display: flex; gap: 8px; margin-bottom: 12px; }
+.title { font-size: 18px; font-weight: 600; margin: 8px 0 12px; }
+
+.reader {
+  font-size: 28px;
+  line-height: 1.7;
+  user-select: none;
+  border: 1px solid #ddd;
+  padding: 12px;
+  border-radius: 10px;
+}
+
+.ch { cursor: pointer; }
+.ch:hover { background: rgba(0,0,0,0.06); border-radius: 4px; }
+
+.popup {
+  position: fixed;
+  width: min(360px, 92vw);
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 10px 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  z-index: 9999;
+}
+
+.hidden { display: none; }
+
+.popup-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.popup-word { font-size: 22px; font-weight: 700; }
+.popup-line { margin-top: 6px; font-size: 14px; }
+.popup-debug { margin-top: 8px; font-size: 12px; opacity: 0.6; }
+button { cursor: pointer; }
+
+.chapter-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+}
+
+.paragraph {
+  margin: 0 0 14px 0;
+}
