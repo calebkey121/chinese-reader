@@ -44,6 +44,17 @@ jobs:
     runs-on: self-hosted
     needs: build
 
+    permissions:
+      contents: read
+      packages: read
+
     steps:
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Deploy container
         run: bash /home/caleb/chinese_reader/deploy.sh
