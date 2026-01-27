@@ -12,14 +12,15 @@ from models import Book, LookupResult, DictionaryEntry, Span, DictJson
 APP_DIR = Path(__file__).resolve().parent
 DATA_DIR = APP_DIR / "data"
 BOOKS_PATH = DATA_DIR / "books.json"
-DICT_PATH = DATA_DIR / "dict.json"
+DICT_PATH = DATA_DIR / "master_dict.json"
+PROGRESS_PATH = DATA_DIR / "anki_progress.json"
 
-app = FastAPI(title="Graded Reader MVP", version="0.1.0")
+app = FastAPI()
 
-# For local dev. Tighten later.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -28,7 +29,7 @@ def load_books() -> List[Book]:
     if not BOOKS_PATH.exists():
         return []
     raw = json.loads(BOOKS_PATH.read_text(encoding="utf-8"))
-    return [Book.model_validate(b) for b in raw]
+    return [Book(**b) for b in raw]
 
 def save_books(books: List[Book]) -> None:
     DATA_DIR.mkdir(parents=True, exist_ok=True)
@@ -63,82 +64,6 @@ def find_book_chapters(book_id: str):
             return b
     raise HTTPException(404, detail=f"book_id not found: {book_id}")
 
-def lookup_entry(headword: str, d: DictJson) -> Optional[DictionaryEntry]:
-    if headword not in d:
-        return None
-    payload = d[headword]
-    return DictionaryEntry(
-        headword=headword,
-        pinyin=payload.get("pinyin", []),
-        definitions=payload.get("definitions", []),
-    )
-
-def clamp_offset(offset: int, text_len: int) -> int:
-    if text_len <= 0:
-        return 0
-    if offset < 0:
-        return 0
-    if offset >= text_len:
-        return text_len - 1
-    return offset
-
-def select_span_by_offset(text: str, offset: int, d: DictJson) -> Span:
-    """
-    Longest-match selection (MVP):
-    - Find the longest dictionary entry (up to max_len) whose span includes `offset`.
-    - If none found, fall back to single character at offset.
-    """
-    n = len(text)
-    if n == 0:
-        return Span(text="", start=0, end=0)
-
-    o = clamp_offset(offset, n)
-
-    max_len = 4  # set to 4; you can bump to 6 later if you want
-
-    best = None  # (length, start, end, word)
-
-    # Consider spans that include the tapped offset.
-    # Start can be at most `o` (so it includes o), and at least `o-(max_len-1)`.
-    start_min = max(0, o - (max_len - 1))
-    start_max = o
-
-    for start in range(start_min, start_max + 1):
-        # longest-first for this start
-        for length in range(max_len, 0, -1):
-            end = start + length
-            if end > n:
-                continue
-            if not (start <= o < end):
-                continue
-
-            w = text[start:end]
-            if w in d:
-                # prefer longer; if tie, prefer the one with start closest to o (optional)
-                cand = (length, start, end, w)
-                if best is None:
-                    best = cand
-                else:
-                    if cand[0] > best[0]:
-                        best = cand
-                    elif cand[0] == best[0]:
-                        # tie-break: prefer spans starting closer to tapped offset
-                        if abs(cand[1] - o) < abs(best[1] - o):
-                            best = cand
-                break  # don't check shorter lengths for this start
-
-    if best is not None:
-        _, start, end, w = best
-        return Span(text=w, start=start, end=end)
-
-    # fallback: single character
-    w1 = text[o:o + 1]
-    return Span(text=w1, start=o, end=o + 1)
-
-@app.get("/health")
-def health():
-    return {"ok": True}
-
 @app.get("/books")
 def list_books():
     books = load_books()
@@ -146,25 +71,32 @@ def list_books():
 
 @app.get("/books/{book_id}")
 def get_book(book_id: str):
-    book = find_book_chapters(book_id)
+    b = find_book_chapters(book_id)
     return {
-        "book_id": book.id,
-        "title": book.title,
-        "chapters": [{"id": c.id, "title": c.title} for c in book.chapters],
+        "schema_version": b.schema_version,
+        "id": b.id,
+        "title": b.title,
+        "chapters": [{"id": ch.id, "title": ch.title} for ch in b.chapters],
     }
 
 @app.get("/books/{book_id}/chapters/{chapter_id}")
-def get_book_chapter(book_id: str, chapter_id: str):
+def get_chapter(book_id: str, chapter_id: str):
     book, idx = find_book_and_chapter(book_id, chapter_id)
     ch = book.chapters[idx]
-    return {
-        "book_id": book.id,
+
+    d = {
+        "book_id": book_id,
         "book_title": book.title,
         "chapter_id": ch.id,
         "chapter_title": ch.title,
         "text": ch.text,
-        "en_sentences": getattr(ch, "en_sentences", []),
     }
+
+    # keep compatibility if you later add en_sentences to your Book model
+    if hasattr(ch, "en_sentences"):
+        d["en_sentences"] = getattr(ch, "en_sentences")
+
+    return d
 
 @app.get("/lookup/by_offset", response_model=LookupResult)
 def lookup_by_offset(
@@ -176,33 +108,153 @@ def lookup_by_offset(
     book, idx = find_book_and_chapter(book_id, chapter_id)
     ch = book.chapters[idx]
 
-    span = select_span_by_offset(ch.text, offset, d)
-    entry = lookup_entry(span.text, d)
-    return LookupResult(selected=span, entry=entry)
+    # Find the longest matching headword around the offset.
+    text = ch.text
+    if offset < 0 or offset >= len(text):
+        raise HTTPException(400, detail="offset out of range")
+
+    best = None
+    best_span = None
+
+    for start in range(max(0, offset - 12), offset + 1):
+        for end in range(offset + 1, min(len(text), offset + 13) + 1):
+            candidate = text[start:end]
+            if candidate in d:
+                if best is None or (end - start) > (best_span.end - best_span.start):
+                    best = candidate
+                    best_span = Span(text=candidate, start=start, end=end)
+
+    if best is None:
+        # fallback to single char
+        best = text[offset]
+        best_span = Span(text=best, start=offset, end=offset + 1)
+
+    entry = d.get(best)
+    if entry and isinstance(entry, dict):
+        # Only pinyin/definitions are used by the typed response model here
+        return LookupResult(
+            selected=best_span,
+            entry=DictionaryEntry(headword=best, pinyin=entry.get("pinyin", []), definitions=entry.get("definitions", [])),
+        )
+
+    return LookupResult(selected=best_span, entry=None)
 
 @app.get("/lookup/in_text", response_model=LookupResult)
 def lookup_in_text(
-    text: str = Query(..., description="Arbitrary text to lookup within"),
-    offset: int = Query(..., description="0-based character index into `text`"),
+    text: str = Query(...),
+    offset: int = Query(..., description="0-based character index in provided text"),
 ):
     d = load_dict()
-    span = select_span_by_offset(text, offset, d)
-    entry = lookup_entry(span.text, d)
-    return LookupResult(selected=span, entry=entry)
+    if offset < 0 or offset >= len(text):
+        raise HTTPException(400, detail="offset out of range")
 
-# Optional: quick way to add/import a book (MVP convenience)
-@app.post("/books/import", response_model=Book)
+    best = None
+    best_span = None
+
+    for start in range(max(0, offset - 12), offset + 1):
+        for end in range(offset + 1, min(len(text), offset + 13) + 1):
+            candidate = text[start:end]
+            if candidate in d:
+                if best is None or (end - start) > (best_span.end - best_span.start):
+                    best = candidate
+                    best_span = Span(text=candidate, start=start, end=end)
+
+    if best is None:
+        best = text[offset]
+        best_span = Span(text=best, start=offset, end=offset + 1)
+
+    entry = d.get(best)
+    if entry and isinstance(entry, dict):
+        return LookupResult(
+            selected=best_span,
+            entry=DictionaryEntry(headword=best, pinyin=entry.get("pinyin", []), definitions=entry.get("definitions", [])),
+        )
+
+    return LookupResult(selected=best_span, entry=None)
+
+@app.post("/import_book")
 def import_book(book: Book):
     books = load_books()
-    # overwrite if same id
     books = [b for b in books if b.id != book.id] + [book]
     save_books(books)
     return book
 
-# Optional: add/patch dictionary entries (MVP convenience)
 @app.post("/dict/put")
 def dict_put(entry: DictionaryEntry):
     d = load_dict()
-    d[entry.headword] = {"pinyin": entry.pinyin, "definitions": entry.definitions}
+    existing = d.get(entry.headword, {}) if isinstance(d, dict) else {}
+    tags = existing.get("tags") if isinstance(existing, dict) else None
+
+    rec = {"pinyin": entry.pinyin, "definitions": entry.definitions}
+    if tags:
+        rec["tags"] = tags
+
+    d[entry.headword] = rec
     save_dict(d)
     return {"ok": True, "headword": entry.headword}
+
+@app.get("/dict")
+def get_dict():
+    """Return raw master_dict.json (including tags)."""
+    return load_dict()
+
+@app.get("/progress")
+def get_progress():
+    """Return anki_progress.json if present; otherwise empty."""
+    if not PROGRESS_PATH.exists():
+        return {"schema_version": 1, "terms": {}}
+    return json.loads(PROGRESS_PATH.read_text(encoding="utf-8"))
+
+PROGRESS_PATH = DATA_DIR / "anki_progress.json"
+
+# Ensure your models import includes Span:
+# from models import Book, LookupResult, DictionaryEntry, Span, DictJson
+
+@app.get("/lookup/in_text", response_model=LookupResult)
+def lookup_in_text(
+    text: str = Query(...),
+    offset: int = Query(..., description="0-based character index in provided text"),
+):
+    d = load_dict()
+    if offset < 0 or offset >= len(text):
+        raise HTTPException(400, detail="offset out of range")
+
+    best = None
+    best_span = None
+
+    for start in range(max(0, offset - 12), offset + 1):
+        for end in range(offset + 1, min(len(text), offset + 13) + 1):
+            candidate = text[start:end]
+            if candidate in d:
+                if best is None or (end - start) > (best_span.end - best_span.start):
+                    best = candidate
+                    best_span = Span(text=candidate, start=start, end=end)
+
+    if best is None:
+        best = text[offset]
+        best_span = Span(text=best, start=offset, end=offset + 1)
+
+    entry = d.get(best)
+    if entry and isinstance(entry, dict):
+        return LookupResult(
+            selected=best_span,
+            entry=DictionaryEntry(
+                headword=best,
+                pinyin=entry.get("pinyin", []),
+                definitions=entry.get("definitions", []),
+            ),
+        )
+
+    return LookupResult(selected=best_span, entry=None)
+
+@app.get("/dict")
+def get_dict():
+    """Return raw master_dict.json (including tags)."""
+    return load_dict()
+
+@app.get("/progress")
+def get_progress():
+    """Return anki_progress.json if present; otherwise empty."""
+    if not PROGRESS_PATH.exists():
+        return {"schema_version": 1, "terms": {}}
+    return json.loads(PROGRESS_PATH.read_text(encoding="utf-8"))

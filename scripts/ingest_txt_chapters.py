@@ -12,11 +12,13 @@ from typing import Any
 import jieba
 from pypinyin import lazy_pinyin, Style
 
+from temp import OPENAI_API_KEY
+
 ROOT = Path(__file__).resolve().parents[1]
 INCOMING = ROOT / "data" / "books" / "incoming"
 ARCHIVE = ROOT / "data" / "books" / "archive"
 BOOKS_JSON = ROOT / "data" / "books.json"
-DICT_JSON = ROOT / "data" / "dict.json"
+DICT_JSON = ROOT / "data" / "master_dict.json"
 
 # --- Translation backends ---
 # Local (Ollama)
@@ -24,16 +26,18 @@ OLLAMA_URL = "http://192.168.1.153:11434/api/generate"
 OLLAMA_MODEL = "mistral-nemo:latest"
 
 # OpenAI
-OPENAI_API_KEY = ""  # set later (or via env)
-OPENAI_MODEL = "gpt-5-nano-2025-07"
+OPENAI_MODEL = "gpt-5-nano-2025-08-07"
 
 # Choose backend: "local" or "openai"
-TRANSLATION_BACKEND = "local"
+TRANSLATION_BACKEND = "openai"
 
 # --- Behavior flags ---
 DO_TRANSLATE = True
 FORCE_TRANSLATE = False
 FILL_MISSING_VOCAB = True
+
+# Batch size for OpenAI vocab-definition calls (larger = fewer requests)
+VOCAB_DEFINITION_BATCH_SIZE = 50
 
 # Only one output location: processed == archive (automatic move)
 AUTO_ARCHIVE_INCOMING = True
@@ -107,6 +111,41 @@ def openai_chat(prompt: str, timeout_s: int = 120) -> str:
     # Fallback: try top-level convenience fields if present
     out = (data.get("output_text") or "").strip()
     return out
+
+
+# --- Batched OpenAI vocab definition helper ---
+def openai_define_headwords_batch(headwords: list[str], timeout_s: int = 180) -> dict[str, list[str]]:
+    """Define many headwords in one OpenAI call. Returns mapping headword -> definitions list."""
+    # Keep it compact to minimize prompt tokens.
+    headwords = [h for h in headwords if h]
+    if not headwords:
+        return {}
+
+    prompt = (
+        "You are a concise Chinese-English dictionary. "
+        "For each Chinese headword provided, return ONLY valid JSON mapping each headword to an object with a 'definitions' array. "
+        "Definitions must be short everyday English, 1-3 items. Do not include pinyin. "
+        "Return exactly these keys (no extra).\n\n"
+        "Headwords:\n" + "\n".join(headwords)
+    )
+
+    out = openai_chat(prompt, timeout_s=timeout_s)
+
+    try:
+        obj = json.loads(out)
+    except Exception:
+        # If the model returns non-JSON, fail closed.
+        return {}
+
+    results: dict[str, list[str]] = {}
+    for hw in headwords:
+        rec = obj.get(hw)
+        if isinstance(rec, dict):
+            defs = rec.get("definitions")
+            if isinstance(defs, list):
+                cleaned = [re.sub(r"\s+", " ", str(d)).strip() for d in defs if str(d).strip()]
+                results[hw] = cleaned[:3]
+    return results
 
 
 def translate_zh_to_en(text: str, timeout_s: int = 120) -> str:
@@ -269,7 +308,8 @@ def build_en_sentences(chapter_text: str, do_translate: bool) -> list[dict[str, 
     spans = split_sentences_zh(chapter_text)
     out: list[dict[str, Any]] = []
 
-    for start, end, zh in spans:
+    total = len(spans)
+    for idx, (start, end, zh) in enumerate(spans, start=1):
         # Keep original spacing/punctuation in offsets; translate trimmed sentence text.
         zh_clean = zh.strip()
         if not zh_clean:
@@ -277,6 +317,9 @@ def build_en_sentences(chapter_text: str, do_translate: bool) -> list[dict[str, 
 
         en = ""
         if do_translate:
+            # light progress output (every 5 sentences and the last)
+            if idx % 5 == 0 or idx == total:
+                print(f"  Translating sentence {idx}/{total}...")
             en = translate_zh_to_en(zh_clean)
 
         out.append({"start": start, "end": end, "en": en})
@@ -423,11 +466,41 @@ def compute_and_apply_missing_vocab(
     )
 
     filled = 0
-    for t in missing:
-        if not fill_missing:
-            vocab[t] = None
-            continue
 
+    # If not filling, just add null entries.
+    if not fill_missing:
+        for t in missing:
+            vocab[t] = None
+        return (len(all_tokens), len(existing_keys), len(missing), filled)
+
+    # Filling mode.
+    if TRANSLATION_BACKEND == "openai":
+        total_missing = len(missing)
+        for i in range(0, total_missing, VOCAB_DEFINITION_BATCH_SIZE):
+            batch = missing[i:i + VOCAB_DEFINITION_BATCH_SIZE]
+            print(f"Defining vocab batch {i + 1}-{min(i + len(batch), total_missing)}/{total_missing}...")
+
+            defs_map = openai_define_headwords_batch(batch)
+
+            for t in batch:
+                py = pinyin_for(t)
+                defs = defs_map.get(t)
+                if not defs:
+                    # fallback to single call if batch failed for this item
+                    defs = define_headword(t)
+                vocab[t] = {
+                    "pinyin": [py] if py else [],
+                    "definitions": defs,
+                }
+                filled += 1
+
+        return (len(all_tokens), len(existing_keys), len(missing), filled)
+
+    # Local backend: fill one-by-one (Ollama)
+    total_missing = len(missing)
+    for idx, t in enumerate(missing, start=1):
+        if idx % 25 == 0 or idx == total_missing:
+            print(f"Defining vocab {idx}/{total_missing}...")
         py = pinyin_for(t)
         defs = define_headword(t)
         vocab[t] = {
@@ -517,7 +590,7 @@ def main() -> None:
     # Save books.json
     save_json(BOOKS_JSON, books)
 
-    # Update dict.json with missing vocab
+    # Update master_dict.json with missing vocab
     total_tokens, already_defined, missing_added, missing_filled = compute_and_apply_missing_vocab(
         books,
         vocab,
@@ -529,10 +602,13 @@ def main() -> None:
     print(f"Updated {BOOKS_JSON} from {INCOMING}")
     print(f"Chapters written and archived under: {ARCHIVE}")
     if DO_TRANSLATE:
-        print(f"Sentence translations written to books.json using Ollama model: {OLLAMA_MODEL}")
+        if TRANSLATION_BACKEND == "openai":
+            print(f"Sentence translations written to books.json using OpenAI model: {OPENAI_MODEL}")
+        else:
+            print(f"Sentence translations written to books.json using Ollama model: {OLLAMA_MODEL}")
     print(f"Total tokens found: {total_tokens}")
     print(f"Already defined: {already_defined}")
-    print(f"Missing entries added to dict.json: {missing_added}")
+    print(f"Missing entries added to master_dict.json: {missing_added}")
     if FILL_MISSING_VOCAB:
         print(f"Missing entries filled (pinyin/definitions): {missing_filled}")
 

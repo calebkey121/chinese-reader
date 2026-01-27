@@ -39,5 +39,5 @@ class LookupResult(BaseModel):
     entry: Optional[DictionaryEntry] = None
 
 
-# dict.json format (MVP): { "今天": {"pinyin":["jīntiān"], "definitions":["today"]}, ... }
+# master_dict.json format (MVP): { "今天": {"pinyin":["jīntiān"], "definitions":["today"]}, ... }
 DictJson = Dict[str, Dict[str, List[str]]]
