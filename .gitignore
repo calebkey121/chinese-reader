@@ -204,3 +204,4 @@ marimo/_lsp/
 __marimo__/
 .DS_Store
 archive/
+data/
