@@ -1,4 +1,4 @@
-const API = "http://192.168.1.232:8000";
+const API = "https://athens.tailebb1c8.ts.net/chinese-reader/";
 console.log("app.js loaded");
 
 const bookSelect = document.getElementById("bookSelect");
