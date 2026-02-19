@@ -143,6 +143,27 @@ def get_chapter(book_id: str, chapter_id: str):
     return d
 
 
+def _as_str_list(v) -> list[str]:
+    """Normalize a field that may be a str or list[str] into list[str]."""
+    if v is None:
+        return []
+    if isinstance(v, str):
+        s = v.strip()
+        return [s] if s else []
+    if isinstance(v, list):
+        out: list[str] = []
+        for x in v:
+            if x is None:
+                continue
+            if isinstance(x, str):
+                s = x.strip()
+                if s:
+                    out.append(s)
+            else:
+                out.append(str(x))
+        return out
+    return [str(v)]
+
 def _lookup_span(d: DictJson, text: str, offset: int) -> LookupResult:
     if offset < 0 or offset >= len(text):
         raise HTTPException(400, detail="offset out of range")
@@ -164,12 +185,14 @@ def _lookup_span(d: DictJson, text: str, offset: int) -> LookupResult:
 
     entry = d.get(best)
     if entry and isinstance(entry, dict):
+        # Some dict sources store pinyin/definitions as either a string or list of strings.
+        # Normalize to lists to satisfy the Pydantic model and keep the API consistent.
         return LookupResult(
             selected=best_span,
             entry=DictionaryEntry(
                 headword=best,
-                pinyin=entry.get("pinyin", []),
-                definitions=entry.get("definitions", []),
+                pinyin=_as_str_list(entry.get("pinyin")),
+                definitions=_as_str_list(entry.get("definitions") or entry.get("hsk_definition") or entry.get("ccedict_definition")),
             ),
         )
 

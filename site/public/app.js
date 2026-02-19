@@ -1,4 +1,5 @@
-const API = "https://athens.tailebb1c8.ts.net/chinese-reader/";
+const API = "https://athens.tailebb1c8.ts.net/chinese-reader";
+
 console.log("app.js loaded");
 
 const bookSelect = document.getElementById("bookSelect");
@@ -479,7 +480,22 @@ readerEl.addEventListener("click", async (e) => {
     `&chapter_id=${encodeURIComponent(current.chapterId)}` +
     `&offset=${offset}`;
 
-  const result = await fetchJson(url);
+  let result;
+  try {
+    result = await fetchJson(url);
+  } catch (err) {
+    console.error("lookup/by_offset failed", url, err);
+    // Fallback: still show the single character so the UI feels responsive
+    const fallbackWord = target.textContent || "";
+    popupWord.textContent = fallbackWord;
+    popupPinyin.textContent = "(lookup failed)";
+    popupDefs.textContent = "";
+    popupDebug.textContent = `offset=${offset}`;
+    showPopup(e.clientX + 10, e.clientY + 10);
+    speak(fallbackWord);
+    return;
+  }
+
   const word = result?.selected?.text || target.textContent || "";
 
   popupWord.textContent = word;
@@ -550,13 +566,59 @@ function getHskLevelFromTags(tags, schema) {
 async function ensureVocabCache() {
   if (vocabCache) return vocabCache;
 
-  const [dict, progress] = await Promise.all([
+  const [dictRaw, progress] = await Promise.all([
     fetchJson(`${API}/dict`),
     fetchJson(`${API}/progress`),
   ]);
 
+  // Normalize /dict into an object keyed by the Chinese headword.
+  // Your API currently returns an array of entries like:
+  // { word: "饿", pinyin: "è", hsk_definition: [...], ccedict_definition: [...], tags: [...] }
+  function normalizeDict(raw) {
+    if (!raw) return {};
+
+    // Case 1: array of entries
+    if (Array.isArray(raw)) {
+      const out = {};
+      for (const entry of raw) {
+        if (!entry || typeof entry !== "object") continue;
+        const hw = entry.word || entry.headword || entry.text || entry.simplified;
+        if (!hw) continue;
+        out[hw] = entry;
+      }
+      return out;
+    }
+
+    // Case 2: object keyed by numeric IDs, with entry containing the headword
+    if (typeof raw === "object") {
+      const entries = Object.entries(raw);
+      const looksNumericKeyed = entries.length && entries.slice(0, 20).every(([k, v]) => {
+        const isNum = /^\d+$/.test(String(k));
+        const hasHw = v && typeof v === "object" && (v.word || v.headword || v.text || v.simplified);
+        return isNum && hasHw;
+      });
+
+      if (looksNumericKeyed) {
+        const out = {};
+        for (const [, entry] of entries) {
+          if (!entry || typeof entry !== "object") continue;
+          const hw = entry.word || entry.headword || entry.text || entry.simplified;
+          if (!hw) continue;
+          out[hw] = entry;
+        }
+        return out;
+      }
+
+      // Normal case: already headword-keyed
+      return raw;
+    }
+
+    return {};
+  }
+
+  const dict = normalizeDict(dictRaw);
   const learnedMap = (progress && progress.terms) ? progress.terms : {};
-  vocabCache = { dict: dict || {}, progress: progress || {}, learnedMap };
+  vocabCache = { dict, progress: progress || {}, learnedMap };
   return vocabCache;
 }
 
@@ -584,9 +646,16 @@ function normalizeStr(s) {
 
 function entryTextForSearch(entry) {
   if (!entry || typeof entry !== "object") return "";
-  const p = Array.isArray(entry.pinyin) ? entry.pinyin.join(" ") : "";
-  const d = Array.isArray(entry.definitions) ? entry.definitions.join(" ") : "";
-  return `${p} ${d}`.trim();
+
+  const p = (typeof entry.pinyin === "string")
+    ? entry.pinyin
+    : (Array.isArray(entry.pinyin) ? entry.pinyin.join(" ") : "");
+
+  const hskDef = Array.isArray(entry.hsk_definition) ? entry.hsk_definition.join(" ") : "";
+  const ccDef = Array.isArray(entry.ccedict_definition) ? entry.ccedict_definition.join(" ") : "";
+  const defs = `${hskDef} ${ccDef}`.trim();
+
+  return `${p} ${defs}`.trim();
 }
 
 // -------------------- Vocab rendering --------------------
@@ -706,12 +775,18 @@ function renderVocabList(words, dict, learnedMap) {
     const entry = dict[w];
     const learned = isLearned(w, learnedMap);
 
-    const pinyin = (entry && typeof entry === "object" && Array.isArray(entry.pinyin))
-      ? entry.pinyin.join(" / ")
+    const pinyin = (entry && typeof entry === "object")
+      ? (typeof entry.pinyin === "string" ? entry.pinyin : (Array.isArray(entry.pinyin) ? entry.pinyin.join(" / ") : ""))
       : "";
 
-    const defs = (entry && typeof entry === "object" && Array.isArray(entry.definitions))
-      ? entry.definitions.join("; ")
+    const defs = (entry && typeof entry === "object")
+      ? (() => {
+          const hskDef = Array.isArray(entry.hsk_definition) ? entry.hsk_definition : [];
+          const ccDef = Array.isArray(entry.ccedict_definition) ? entry.ccedict_definition : [];
+          // Prefer HSK definition first, then CC-CEDICT extras
+          const all = [...hskDef, ...ccDef];
+          return all.filter(Boolean).join("; ");
+        })()
       : "";
 
     const row = document.createElement("div");
@@ -744,7 +819,7 @@ function renderVocabList(words, dict, learnedMap) {
       popupWord.textContent = w;
       popupPinyin.textContent = pinyin || "(no pinyin)";
       popupDefs.textContent = defs || "(no definition)";
-      popupDebug.textContent = `HSK ${activeHskLevel} • HSK ${hskSchema} • ${learned ? "learned" : "not learned"}`;
+      popupDebug.textContent = `HSK ${activeHskLevel} • ${learned ? "learned" : "not learned"}`;
 
       showPopup(e.clientX + 10, e.clientY + 10);
       speak(w);
@@ -758,6 +833,18 @@ function renderVocabList(words, dict, learnedMap) {
 
 // -------------------- Vocab controls wiring --------------------
 
+function rerenderActiveVocabLevel() {
+  if (!activeHskLevel) return;
+  ensureVocabCache().then(({ dict, learnedMap }) => {
+    const words = [];
+    for (const [headword, entry] of Object.entries(dict || {})) {
+      if (getHskLevelFromTags(entry?.tags, hskSchema) === activeHskLevel) words.push(headword);
+    }
+    words.sort((a, b) => a.localeCompare(b, "zh-Hans-CN"));
+    renderVocabList(words, dict, learnedMap);
+  });
+}
+
 vocabBackBtn?.addEventListener("click", (e) => {
   e.stopPropagation();
   showVocabSummary();
@@ -767,37 +854,28 @@ filterAllBtn?.addEventListener("click", (e) => {
   e.stopPropagation();
   vocabFilter = "all";
   setFilterActive(filterAllBtn);
-  if (activeHskLevel) {
-    ensureVocabCache().then(({ dict, learnedMap }) => {
-      const words = [];
-      for (const [headword, entry] of Object.entries(dict || {})) {
-        if (getHskLevelFromTags(entry?.tags, hskSchema) === activeHskLevel) words.push(headword);
-      }
-      words.sort((a, b) => a.localeCompare(b, "zh-Hans-CN"));
-      renderVocabList(words, dict, learnedMap);
-    });
-  }
+  rerenderActiveVocabLevel();
 });
 
 filterLearnedBtn?.addEventListener("click", (e) => {
   e.stopPropagation();
   vocabFilter = "learned";
   setFilterActive(filterLearnedBtn);
-  filterAllBtn?.dispatchEvent(new Event("click"));
+  rerenderActiveVocabLevel();
 });
 
 filterNotLearnedBtn?.addEventListener("click", (e) => {
   e.stopPropagation();
   vocabFilter = "not";
   setFilterActive(filterNotLearnedBtn);
-  filterAllBtn?.dispatchEvent(new Event("click"));
+  rerenderActiveVocabLevel();
 });
 
 vocabSearchEl?.addEventListener("input", (e) => {
   const t = e.target;
   if (!(t instanceof HTMLInputElement)) return;
   vocabQuery = t.value || "";
-  filterAllBtn?.dispatchEvent(new Event("click"));
+  rerenderActiveVocabLevel();
 });
 
 // -------------------- Boot --------------------
