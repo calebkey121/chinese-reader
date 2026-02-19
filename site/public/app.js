@@ -40,9 +40,7 @@ const filterLearnedBtn = document.getElementById("filterLearned");
 const filterNotLearnedBtn = document.getElementById("filterNotLearned");
 const vocabSearchEl = document.getElementById("vocabSearch");
 
-/* HSK schema toggle */
-const schema30Btn = document.getElementById("schema30");
-const schema20Btn = document.getElementById("schema20");
+
 
 let isPlayingAll = false;
 let currentView = "stories"; // "stories" | "vocab"
@@ -55,50 +53,7 @@ let activeHskLevel = null; // number (from tag suffix)
 let vocabFilter = "all"; // "all" | "learned" | "not"
 let vocabQuery = "";
 
-/* HSK schema: "3.0" | "2.0" (default 3.0) */
-let hskSchema = "3.0";
 
-// -------------------- HSK schema --------------------
-
-function loadHskSchema() {
-  const saved = localStorage.getItem("hskSchema");
-  if (saved === "2.0" || saved === "3.0") hskSchema = saved;
-  else hskSchema = "3.0";
-  applyHskSchemaButtons();
-}
-
-function setHskSchema(next) {
-  if (next !== "2.0" && next !== "3.0") return;
-  if (hskSchema === next) return;
-
-  hskSchema = next;
-  localStorage.setItem("hskSchema", hskSchema);
-  applyHskSchemaButtons();
-
-  // Re-render whichever vocab screen you're on
-  if (currentView === "vocab") {
-    if (vocabMode === "level" && activeHskLevel != null) {
-      showVocabLevel(activeHskLevel);
-    } else {
-      showVocabSummary();
-    }
-  }
-}
-
-function applyHskSchemaButtons() {
-  schema30Btn?.classList.toggle("is-active", hskSchema === "3.0");
-  schema20Btn?.classList.toggle("is-active", hskSchema === "2.0");
-}
-
-schema30Btn?.addEventListener("click", (e) => {
-  e.stopPropagation();
-  setHskSchema("3.0");
-});
-
-schema20Btn?.addEventListener("click", (e) => {
-  e.stopPropagation();
-  setHskSchema("2.0");
-});
 
 // -------------------- TTS --------------------
 
@@ -548,19 +503,35 @@ titleEl.addEventListener("click", async (e) => {
 
 // -------------------- Vocab helpers --------------------
 
-function getHskLevelFromTags(tags, schema) {
-  if (!Array.isArray(tags)) return null;
+function getHskLevels(entry) {
+  if (!entry || typeof entry !== "object") return [];
+  const band =
+    entry.hsk_bands ?? entry.hskBands ??
+    entry.hsk_band ?? entry.hskBand ??
+    entry.hsk_levels ?? entry.hskLevels ??
+    entry.hsk_level ?? entry.hskLevel;
+  if (band == null) return [];
 
-  const prefix = (schema === "2.0") ? "hsk2.0_" : "hsk3.0_";
+  // Allow: number, "5", "1,5", "1 5", "1/5", ["1","5"], [1,5]
+  const raw = Array.isArray(band) ? band : [band];
+  const out = new Set();
 
-  for (const t of tags) {
-    if (typeof t !== "string") continue;
-    if (!t.startsWith(prefix)) continue;
-
-    const n = parseInt(t.slice(prefix.length), 10);
-    if (Number.isFinite(n)) return n;
+  for (const v of raw) {
+    if (v == null) continue;
+    const s = String(v);
+    for (const m of s.matchAll(/\d+/g)) {
+      const n = parseInt(m[0], 10);
+      if (Number.isFinite(n)) out.add(n);
+    }
   }
-  return null;
+
+  return Array.from(out).sort((a, b) => a - b);
+}
+
+function getHskLevel(entry) {
+  // Back-compat: return the smallest band if callers still use single-level logic
+  const lvls = getHskLevels(entry);
+  return lvls.length ? lvls[0] : null;
 }
 
 async function ensureVocabCache() {
@@ -652,7 +623,9 @@ function entryTextForSearch(entry) {
     : (Array.isArray(entry.pinyin) ? entry.pinyin.join(" ") : "");
 
   const hskDef = Array.isArray(entry.hsk_definition) ? entry.hsk_definition.join(" ") : "";
-  const ccDef = Array.isArray(entry.ccedict_definition) ? entry.ccedict_definition.join(" ") : "";
+  const ccDef = Array.isArray(entry.ccedict_definitions)
+    ? entry.ccedict_definitions.join(" ")
+    : (Array.isArray(entry.ccedict_definition) ? entry.ccedict_definition.join(" ") : "");
   const defs = `${hskDef} ${ccDef}`.trim();
 
   return `${p} ${defs}`.trim();
@@ -669,39 +642,51 @@ async function showVocabSummary() {
   try {
     const { dict, learnedMap } = await ensureVocabCache();
 
-    // For now, UI shows 1..6 cards (works for your current hsk3.0_1..6 and hsk2.0_1..6 tagging)
-    const totals = Array.from({ length: 6 }, () => ({ total: 0, learned: 0 }));
+    // UI shows 1..6 plus a combined 7–9 card (grouped by entry.hsk_band)
+    const totals = Array.from({ length: 7 }, () => ({ total: 0, learned: 0 }));
 
     for (const [headword, entry] of Object.entries(dict || {})) {
-      const lvl = getHskLevelFromTags(entry?.tags, hskSchema);
-      if (!lvl) continue;
-      if (lvl < 1 || lvl > 6) continue;
+      const levels = getHskLevels(entry);
+      if (!levels.length) continue;
 
-      totals[lvl - 1].total += 1;
-      if (isLearned(headword, learnedMap)) totals[lvl - 1].learned += 1;
+      // If a word is in multiple bands, count it in each relevant bucket.
+      // Avoid double-counting within the same bucket (e.g., if data had 7 and 8).
+      const buckets = new Set();
+      for (const lvl of levels) {
+        if (!lvl) continue;
+        if (lvl < 1 || lvl > 9) continue;
+        buckets.add(lvl >= 7 ? 7 : lvl);
+      }
+
+      for (const bucket of buckets) {
+        totals[bucket - 1].total += 1;
+        if (isLearned(headword, learnedMap)) totals[bucket - 1].learned += 1;
+      }
     }
 
     hskCardsEl.innerHTML = "";
-    for (let i = 1; i <= 6; i++) {
-      const { total, learned } = totals[i - 1];
+    for (let bucket = 1; bucket <= 7; bucket++) {
+      const { total, learned } = totals[bucket - 1];
       const pct = total ? Math.round((learned / total) * 100) : 0;
+
+      const label = (bucket === 7) ? "7–9" : String(bucket);
 
       const card = document.createElement("div");
       card.className = "hsk-card";
-      card.dataset.hsk = String(i);
+      card.dataset.hsk = String(bucket);
 
       card.innerHTML = `
-        <h3>HSK ${i}</h3>
+        <h3>HSK ${label}</h3>
         <div class="hsk-metrics">
           <div>${learned}/${total}</div>
           <div class="pct">${pct}%</div>
         </div>
-        <div class="vocab-note" style="margin-top:8px;">${hskSchema} tags</div>
+        <div class="vocab-note" style="margin-top:8px;">HSK</div>
       `;
 
       card.addEventListener("click", async (e) => {
         e.stopPropagation();
-        await showVocabLevel(i);
+        await showVocabLevel(bucket);
       });
 
       hskCardsEl.appendChild(card);
@@ -721,7 +706,7 @@ async function showVocabLevel(level) {
 
   setVocabMode("level");
 
-  if (vocabLevelTitle) vocabLevelTitle.textContent = `HSK ${level}`;
+  if (vocabLevelTitle) vocabLevelTitle.textContent = `HSK ${(level === 7) ? "7–9" : level}`;
   if (vocabLevelMeta) vocabLevelMeta.textContent = "Loading…";
   if (vocabListEl) vocabListEl.innerHTML = "";
 
@@ -729,14 +714,20 @@ async function showVocabLevel(level) {
 
   const words = [];
   for (const [headword, entry] of Object.entries(dict || {})) {
-    const lvl = getHskLevelFromTags(entry?.tags, hskSchema);
-    if (lvl === level) words.push(headword);
+    const levels = getHskLevels(entry);
+    if (!levels.length) continue;
+
+    if (level === 7) {
+      if (levels.some((n) => n >= 7 && n <= 9)) words.push(headword);
+    } else {
+      if (levels.includes(level)) words.push(headword);
+    }
   }
 
   words.sort((a, b) => a.localeCompare(b, "zh-Hans-CN"));
 
   const learnedCount = words.reduce((acc, w) => acc + (isLearned(w, learnedMap) ? 1 : 0), 0);
-  if (vocabLevelMeta) vocabLevelMeta.textContent = `${learnedCount}/${words.length} learned • HSK ${hskSchema}`;
+  if (vocabLevelMeta) vocabLevelMeta.textContent = `${learnedCount}/${words.length} learned • HSK`;
 
   renderVocabList(words, dict, learnedMap);
 }
@@ -782,7 +773,9 @@ function renderVocabList(words, dict, learnedMap) {
     const defs = (entry && typeof entry === "object")
       ? (() => {
           const hskDef = Array.isArray(entry.hsk_definition) ? entry.hsk_definition : [];
-          const ccDef = Array.isArray(entry.ccedict_definition) ? entry.ccedict_definition : [];
+          const ccDef = Array.isArray(entry.ccedict_definitions)
+            ? entry.ccedict_definitions
+            : (Array.isArray(entry.ccedict_definition) ? entry.ccedict_definition : []);
           // Prefer HSK definition first, then CC-CEDICT extras
           const all = [...hskDef, ...ccDef];
           return all.filter(Boolean).join("; ");
@@ -819,7 +812,8 @@ function renderVocabList(words, dict, learnedMap) {
       popupWord.textContent = w;
       popupPinyin.textContent = pinyin || "(no pinyin)";
       popupDefs.textContent = defs || "(no definition)";
-      popupDebug.textContent = `HSK ${activeHskLevel} • ${learned ? "learned" : "not learned"}`;
+      const lvlLabel = (activeHskLevel === 7) ? "7–9" : String(activeHskLevel);
+      popupDebug.textContent = `HSK ${lvlLabel} • ${learned ? "learned" : "not learned"}`;
 
       showPopup(e.clientX + 10, e.clientY + 10);
       speak(w);
@@ -838,7 +832,14 @@ function rerenderActiveVocabLevel() {
   ensureVocabCache().then(({ dict, learnedMap }) => {
     const words = [];
     for (const [headword, entry] of Object.entries(dict || {})) {
-      if (getHskLevelFromTags(entry?.tags, hskSchema) === activeHskLevel) words.push(headword);
+      const levels = getHskLevels(entry);
+      if (!levels.length) continue;
+
+      if (activeHskLevel === 7) {
+        if (levels.some((n) => n >= 7 && n <= 9)) words.push(headword);
+      } else {
+        if (levels.includes(activeHskLevel)) words.push(headword);
+      }
     }
     words.sort((a, b) => a.localeCompare(b, "zh-Hans-CN"));
     renderVocabList(words, dict, learnedMap);
@@ -881,7 +882,6 @@ vocabSearchEl?.addEventListener("input", (e) => {
 // -------------------- Boot --------------------
 
 initTheme();
-loadHskSchema();
 
 (async function boot() {
   try {

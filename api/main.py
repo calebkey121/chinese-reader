@@ -76,10 +76,36 @@ def save_books(books: List[Book]) -> None:
     )
 
 
-def load_dict() -> DictJson:
+def load_dict_raw():
+    """Load master_dict.json exactly as stored on disk (dict or list)."""
     if not DICT_PATH.exists():
         return {}
     return json.loads(DICT_PATH.read_text(encoding="utf-8"))
+
+def load_dict() -> DictJson:
+    """
+    Normalize master_dict.json into a dict keyed by headword for lookup.
+    Supports either:
+      - dict: { "爱": { ... }, ... }
+      - list: [ { "word": "爱", ... }, ... ]
+    """
+    raw = load_dict_raw()
+    if isinstance(raw, dict):
+        return raw
+
+    if isinstance(raw, list):
+        out: dict = {}
+        for item in raw:
+            if not isinstance(item, dict):
+                continue
+            head = item.get("word") or item.get("headword")
+            if not head or not isinstance(head, str):
+                continue
+            # Store the item as-is; lookup code will pull pinyin/definitions from known fields.
+            out[head] = item
+        return out
+
+    return {}
 
 
 def save_dict(d: DictJson) -> None:
@@ -192,7 +218,12 @@ def _lookup_span(d: DictJson, text: str, offset: int) -> LookupResult:
             entry=DictionaryEntry(
                 headword=best,
                 pinyin=_as_str_list(entry.get("pinyin")),
-                definitions=_as_str_list(entry.get("definitions") or entry.get("hsk_definition") or entry.get("ccedict_definition")),
+                definitions=_as_str_list(
+                    entry.get("definitions")
+                    or entry.get("hsk_definition")
+                    or entry.get("ccedict_definitions")
+                    or entry.get("ccedict_definition")
+                ),
             ),
         )
 
@@ -245,8 +276,8 @@ def dict_put(entry: DictionaryEntry):
 
 @app.get("/dict")
 def get_dict():
-    """Return raw master_dict.json (including tags)."""
-    return load_dict()
+    """Return raw master_dict.json as stored on disk (including tags)."""
+    return load_dict_raw()
 
 
 @app.get("/progress")
