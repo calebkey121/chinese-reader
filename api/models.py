@@ -10,7 +10,8 @@ class EnSentence(BaseModel):
 
 class Chapter(BaseModel):
     id: str
-    title: str
+    zh_title: str
+    en_title: str
     text: str
     en_sentences: Optional[List[EnSentence]] = None
 
@@ -18,7 +19,8 @@ class Chapter(BaseModel):
 class Book(BaseModel):
     schema_version: int = 1
     id: str
-    title: str
+    zh_title: str
+    en_title: str
     chapters: List[Chapter]
 
 
