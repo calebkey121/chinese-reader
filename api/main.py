@@ -20,6 +20,34 @@ DICT_PATH = DATA_DIR / "master_dict.json"
 PROGRESS_PATH = DATA_DIR / "anki_progress.json"
 
 
+def _get_book_zh_title(b: Book) -> str:
+    if hasattr(b, "zh_title") and getattr(b, "zh_title"):
+        return getattr(b, "zh_title")
+    if hasattr(b, "title") and getattr(b, "title"):
+        return getattr(b, "title")
+    return ""
+
+
+def _get_book_en_title(b: Book) -> str:
+    if hasattr(b, "en_title") and getattr(b, "en_title"):
+        return getattr(b, "en_title")
+    return ""
+
+
+def _get_chapter_zh_title(ch) -> str:
+    if hasattr(ch, "zh_title") and getattr(ch, "zh_title"):
+        return getattr(ch, "zh_title")
+    if hasattr(ch, "title") and getattr(ch, "title"):
+        return getattr(ch, "title")
+    return ""
+
+
+def _get_chapter_en_title(ch) -> str:
+    if hasattr(ch, "en_title") and getattr(ch, "en_title"):
+        return getattr(ch, "en_title")
+    return ""
+
+
 def _parse_csv_env(name: str) -> list[str]:
     raw = os.getenv(name, "").strip()
     if not raw:
@@ -135,17 +163,40 @@ def find_book_chapters(book_id: str) -> Book:
 @app.get("/books")
 def list_books():
     books = load_books()
-    return [{"id": b.id, "title": b.title} for b in books]
+    out = []
+    for b in books:
+        zh_title = _get_book_zh_title(b)
+        out.append(
+            {
+                "id": b.id,
+                # Keep existing API shape: "title" means the primary (Chinese) title
+                "title": zh_title,
+                "zh_title": zh_title,
+                "en_title": _get_book_en_title(b),
+            }
+        )
+    return out
 
 
 @app.get("/books/{book_id}")
 def get_book(book_id: str):
     b = find_book_chapters(book_id)
+    zh_title = _get_book_zh_title(b)
     return {
         "schema_version": b.schema_version,
         "id": b.id,
-        "title": b.title,
-        "chapters": [{"id": ch.id, "title": ch.title} for ch in b.chapters],
+        "title": zh_title,
+        "zh_title": zh_title,
+        "en_title": _get_book_en_title(b),
+        "chapters": [
+            {
+                "id": ch.id,
+                "title": _get_chapter_zh_title(ch),
+                "zh_title": _get_chapter_zh_title(ch),
+                "en_title": _get_chapter_en_title(ch),
+            }
+            for ch in b.chapters
+        ],
     }
 
 
@@ -154,11 +205,22 @@ def get_chapter(book_id: str, chapter_id: str):
     book, idx = find_book_and_chapter(book_id, chapter_id)
     ch = book.chapters[idx]
 
+    book_zh_title = _get_book_zh_title(book)
+    book_en_title = _get_book_en_title(book)
+    chapter_zh_title = _get_chapter_zh_title(ch)
+    chapter_en_title = _get_chapter_en_title(ch)
+
     d = {
         "book_id": book_id,
-        "book_title": book.title,
+        # Keep existing fields but map them to zh_title for compatibility
+        "book_title": book_zh_title,
         "chapter_id": ch.id,
-        "chapter_title": ch.title,
+        "chapter_title": chapter_zh_title,
+        # Expose explicit zh/en fields for newer clients
+        "book_zh_title": book_zh_title,
+        "book_en_title": book_en_title,
+        "chapter_zh_title": chapter_zh_title,
+        "chapter_en_title": chapter_en_title,
         "text": ch.text,
     }
 

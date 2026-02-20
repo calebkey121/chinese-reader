@@ -1,4 +1,5 @@
-const API = "https://athens.tailebb1c8.ts.net/chinese-reader";
+//const API = "https://athens.tailebb1c8.ts.net/chinese-reader";
+const API = "http://100.85.170.27/chinese-reader";
 
 console.log("app.js loaded");
 
